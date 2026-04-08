@@ -61,6 +61,19 @@ Step 3 — Sort alphabetically:
   Output: [Acme, Bigcorp, Zork]
 ```
 
+#### Flowchart
+
+```mermaid
+flowchart TD
+    A([customers list]) --> B[count trades per customer]
+    B --> C{"5% threshold\ncount * 100 >= total * 5 ?"}
+    C -- Yes --> D[add to result list]
+    C -- No --> E[skip]
+    D --> F[sort alphabetically]
+    E --> F
+    F --> G([active traders list])
+```
+
 #### Example
 
 | Customer    | Trades | % of total (23) | Active? |
@@ -95,6 +108,18 @@ grade < 38?
                  │       ├─ YES → return nextMultiple5  (e.g. 84 → 85)
                  │       │
                  │       └─ NO  → return grade as-is   (e.g. 57 → 57)
+```
+
+#### Flowchart
+
+```mermaid
+flowchart TD
+    A([grade]) --> B{"grade < 38 ?"}
+    B -- Yes --> C([return grade unchanged])
+    B -- No --> D["nextMultiple5 = ceil(grade / 5) * 5"]
+    D --> E{"nextMultiple5 - grade < 3 ?"}
+    E -- Yes --> F([return nextMultiple5])
+    E -- No --> G([return grade unchanged])
 ```
 
 #### Examples
@@ -148,6 +173,22 @@ Step 2 — For each query, sort and look up:
   query "abcd"   → "abcd"   → freq["abcd"]   = 0
 
 Output: [3, 2, 0]
+```
+
+#### Flowchart
+
+```mermaid
+flowchart TD
+    subgraph BUILD ["Build Phase — Dictionary"]
+        B1([dictionary words]) --> B2[sort chars of each word]
+        B2 --> B3["freq[sorted key]++"]
+    end
+    subgraph QUERY ["Query Phase"]
+        Q1([query words]) --> Q2[sort chars of query]
+        Q2 --> Q3["result.add(freq.getOrDefault(key, 0))"]
+        Q3 --> Q4([result list])
+    end
+    B3 --> Q1
 ```
 
 #### Complexity
